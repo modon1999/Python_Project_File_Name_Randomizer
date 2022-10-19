@@ -3,7 +3,8 @@
 Программа использует в виде входных данных путь до директории который пользователь выбирает через gui,
 затем она создает список названий файлов(директории игнорируются) и по количеству элементов создается список имет от
 1 до N(где N - количество файлов), затем она переименовывает все файлы в temp_<название_файла>, после чего
-последовательно проходится по списку с рандомными именами и в случайном порядке переназывает файлы в директории.
+последовательно проходится по списку с рандомными именами и в случайном порядке переназывает файлы в директории,
+сохраняя расширение.
 """
 import random
 import tkinter.filedialog
@@ -26,11 +27,16 @@ for item in files:  # переименовываем все файлы в фор
 for name in random_names:
     random_elemet = random.randint(0, len(files) - 1)  # выбираем случайное название файла
     file_extension = files[random_elemet]  # создаем расширение файла
-    for letter in file_extension:
+    temp_file_extension = ''  # переменная для создания расширения файла
+    for letter in file_extension[::-1]:
         if letter == '.':
             break
         else:
-            file_extension = file_extension.replace(letter, '', 1)
+            temp_file_extension = letter + temp_file_extension
+    if temp_file_extension != file_extension:
+        file_extension = '.' + temp_file_extension
+    else:  # если разрешения у файла нет, то присваевает ему пустую строку
+        file_extension = ''
     rename(directory + 'temp_' + files[random_elemet],
            directory + str(name) + file_extension)  # переименовываем файлы в соответствии с расширением файла
     files.remove(
